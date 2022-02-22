@@ -1,0 +1,8 @@
+.vs/
+Debug/
+Release/
+SnakeGame.sln
+SnakeGame.vcxproj
+SnakeGame.vcxproj.filters
+SnakeGame.vcxproj.user
+x64/
