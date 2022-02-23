@@ -52,12 +52,12 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw our first triangle
-		shader_program.Use();
-		triangle.Render();
+		shader_program.Use(); // what shaders should we use
+		triangle.Render(); // what object we render - which vertices we sending as input in the VERTEX SHADER
 
 		// check and call events and swap buffers
 		glfwPollEvents();
-		window.SwapBuffers();
+		window.SwapBuffers(); // swap back and front buffers
 	}
 	// glDeleteProgram(shader_program); called in ShaderProgram-class destructor
 
