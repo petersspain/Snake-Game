@@ -1,4 +1,4 @@
-#include "ShaderProgram.h"
+#include "Shader.h"
 
 #include <fstream>
 #include <stdexcept>
@@ -7,19 +7,7 @@
 using namespace std::literals;
 
 // GL ERROR HANDLING REQUIRED
-
-void ShaderProgram::CreateFromStrings(const char* vertex_shader_code, const char* fragment_shader_code) {
-	try {
-		Compile(vertex_shader_code, fragment_shader_code);
-	}
-	catch (const std::runtime_error& e) {
-		std::cerr << e.what() << std::endl;
-		Clear();
-		throw;
-	}
-}
-
-void ShaderProgram::CreateFromFiles(const char* vertex_shader_location, const char* fragment_shader_location) {
+Shader::Shader(const char* vertex_shader_location, const char* fragment_shader_location) {
 	try {
 		std::string vertex_shader_code = ReadFile(vertex_shader_location);
 		std::string fragment_shader_code = ReadFile(fragment_shader_location);
@@ -32,7 +20,7 @@ void ShaderProgram::CreateFromFiles(const char* vertex_shader_location, const ch
 	}
 }
 
-std::string ShaderProgram::ReadFile(const char* flocation) {
+std::string Shader::ReadFile(const char* flocation) {
 	std::string content;
 	std::ifstream fstream(flocation, std::ios::in);
 	if (!fstream.is_open()) {
@@ -47,10 +35,10 @@ std::string ShaderProgram::ReadFile(const char* flocation) {
 	return content;
 }
 
-void ShaderProgram::Compile(const char* vertex_shader_code, const char* fragment_shader_code) {
+void Shader::Compile(const char* vertex_shader_code, const char* fragment_shader_code) {
 	// GL ERROR HANDLING REQUIRED
-	shader_program_object_ = glCreateProgram();
-	if (shader_program_object_ == 0) {
+	shader_id_ = glCreateProgram();
+	if (shader_id_ == 0) {
 		throw std::runtime_error("glCreateProgram() failed"s);
 	}
 
@@ -78,40 +66,34 @@ void ShaderProgram::Compile(const char* vertex_shader_code, const char* fragment
 		AddShader(fragment_shader, fragment_shader_code);
 	}
 	catch (const std::runtime_error& e) {
-		glDetachShader(shader_program_object_, vertex_shader);
+		glDetachShader(shader_id_, vertex_shader);
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);
 		throw std::runtime_error("FRAGMENT SHADER "s + e.what());
 	}
 
-	glLinkProgram(shader_program_object_);
+	glLinkProgram(shader_id_);
 
 	GLint result = 0;
 	GLchar info_log[1024] = { 0 };
-	glGetProgramiv(shader_program_object_, GL_LINK_STATUS, &result);
+	glGetProgramiv(shader_id_, GL_LINK_STATUS, &result);
 	if (!result) {
-		glGetProgramInfoLog(shader_program_object_, sizeof(info_log), NULL, info_log);
-		glDetachShader(shader_program_object_, vertex_shader);
-		glDetachShader(shader_program_object_, fragment_shader);
+		glGetProgramInfoLog(shader_id_, sizeof(info_log), NULL, info_log);
+		glDetachShader(shader_id_, vertex_shader);
+		glDetachShader(shader_id_, fragment_shader);
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);
 		throw std::runtime_error("Error linking program: "s + std::string(info_log));
 	}
 
-	glDetachShader(shader_program_object_, vertex_shader);
-	glDetachShader(shader_program_object_, fragment_shader);
+	glDetachShader(shader_id_, vertex_shader);
+	glDetachShader(shader_id_, fragment_shader);
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 }
 
-void ShaderProgram::AddShader(GLuint shader_id, const char* shader_code) {
-	const GLchar* the_code[1];
-	the_code[0] = shader_code;
-
-	GLint code_length[1];
-	code_length[0] = std::strlen(shader_code);
-
-	glShaderSource(shader_id, 1, the_code, code_length);
+void Shader::AddShader(GLuint shader_id, const char* shader_code) {
+	glShaderSource(shader_id, 1, &shader_code, NULL);
 	glCompileShader(shader_id);
 
 	GLint result = 0;
@@ -123,22 +105,22 @@ void ShaderProgram::AddShader(GLuint shader_id, const char* shader_code) {
 		throw std::runtime_error("Error compiling the shader: "s + std::string(info_log));
 	}
 
-	glAttachShader(shader_program_object_, shader_id);
+	glAttachShader(shader_id_, shader_id);
 }
 
-void ShaderProgram::Use() const {
-	if (shader_program_object_ == 0) {
+void Shader::Use() const {
+	if (shader_id_ == 0) {
 		throw std::runtime_error("Using empty shader program"s);
 	}
-	glUseProgram(shader_program_object_);
+	glUseProgram(shader_id_);
 }
 
-void ShaderProgram::Clear() {
-	if (shader_program_object_ != 0) {
-		glDeleteProgram(shader_program_object_);
+void Shader::Clear() {
+	if (shader_id_ != 0) {
+		glDeleteProgram(shader_id_);
 	}
 }
 
-ShaderProgram::~ShaderProgram() {
+Shader::~Shader() {
 	Clear();
 }

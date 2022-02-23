@@ -5,14 +5,13 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class ShaderProgram {
+class Shader {
 public:
-	void CreateFromStrings(const char* vertex_shader_code, const char* fragment_shader_code);
-	void CreateFromFiles(const char* vertex_shader_location, const char* fragment_shader_location);
+	explicit Shader(const char* vertex_shader_location, const char* fragment_shader_location);
 
 	void Use() const;
 
-	~ShaderProgram();
+	~Shader();
 private:
 	void Clear();
 
@@ -21,5 +20,5 @@ private:
 
 	std::string ReadFile(const char* flocation);
 private:
-	GLuint shader_program_object_ = 0;
+	GLuint shader_id_ = 0;
 };

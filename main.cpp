@@ -7,7 +7,7 @@
 
 #include "Mesh.h"
 #include "Window.h"
-#include "ShaderProgram.h"
+#include "Shader.h"
 
 const int WIDTH = 800; // 1366
 const int HEIGHT = 600; // 768
@@ -27,19 +27,17 @@ int main() {
 	// glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	// Compile shaders
-	ShaderProgram shader_program;
-	shader_program.CreateFromFiles("Shaders/shader.vertex", "Shaders/shader.fragment");
+	Shader shader_program("Shaders/shader.vertex", "Shaders/shader.fragment");
 
 	// Create triangle MESH
 	float vertices[] = {
-		 0.5f,  0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f
+		 // positions        // colors
+		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
 	};
 	size_t indices[] = {
-		0, 1, 3,
-		1, 2, 3
+		1, 2, 3,
 	};
 	Mesh triangle(vertices, sizeof(vertices), indices, sizeof(indices));
 
