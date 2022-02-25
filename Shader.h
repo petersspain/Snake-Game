@@ -11,6 +11,10 @@ public:
 
 	void Use() const;
 
+	void SetInt(const char* varname, int value);
+
+	GLuint GetShaderId() const { return shader_id_; }
+
 	~Shader();
 private:
 	void Clear();

@@ -13,9 +13,17 @@ Mesh::Mesh(GLfloat* vertices, size_t num_of_vertices, size_t* indices, size_t nu
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_of_indices, indices, GL_STATIC_DRAW);
 
-	//position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// texture attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	// unbind all objects
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

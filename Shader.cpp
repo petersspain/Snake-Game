@@ -115,6 +115,15 @@ void Shader::Use() const {
 	glUseProgram(shader_id_);
 }
 
+void Shader::SetInt(const char* varname, int value) {
+	GLint location = glGetUniformLocation(shader_id_, varname);
+	if (location == -1) {
+		std::cerr << "Unable to find uniform (" << varname << ") location in shader : " << shader_id_ << std::endl;
+		throw std::runtime_error("Unable to find uniform location");
+	}
+	glUniform1i(location, value);
+}
+
 void Shader::Clear() {
 	if (shader_id_ != 0) {
 		glDeleteProgram(shader_id_);

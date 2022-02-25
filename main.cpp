@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "Window.h"
 #include "Shader.h"
+#include "Texture.h"
 
 const int WIDTH = 800; // 1366
 const int HEIGHT = 600; // 768
@@ -31,15 +32,19 @@ int main() {
 
 	// Create triangle MESH
 	float vertices[] = {
-		 // positions        // colors
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
+		// positions          // colors           // texture coords
+		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 	};
 	size_t indices[] = {
-		1, 2, 3,
+		0, 1, 3,
+		1, 2, 3
 	};
 	Mesh triangle(vertices, sizeof(vertices), indices, sizeof(indices));
+	Texture wooden_container("Textures/container.jpg");
+	Texture awesome_face("Textures/awesomeface.png", GL_RGBA, GL_UNSIGNED_BYTE, GL_TEXTURE1);
 
 	while (!window.GetShouldClose()) {
 		// input
@@ -51,6 +56,10 @@ int main() {
 
 		// draw our first triangle
 		shader_program.Use(); // what shaders should we use
+		shader_program.SetInt("texture0", 0);
+		shader_program.SetInt("texture1", 1);
+		wooden_container.Use();
+		awesome_face.Use();
 		triangle.Render(); // what object we render - which vertices we sending as input in the VERTEX SHADER
 
 		// check and call events and swap buffers
