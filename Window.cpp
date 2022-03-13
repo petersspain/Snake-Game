@@ -39,6 +39,12 @@ void Window::Clear() {
 	}
 	glfwTerminate();
 }
+// ????
+GLint Window::GetKeyStatus(GLint key) const
+{
+	return glfwGetKey(window_, key);
+}
+// ????
 
 Window::~Window() {
 	Clear();

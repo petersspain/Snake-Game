@@ -10,6 +10,11 @@ public:
 	Texture(const char* file_location, GLint format = GL_RGB, GLenum type = GL_UNSIGNED_BYTE, GLenum texture_unit = GL_TEXTURE0);
 
 	void Use() const;
+
+	void ChangeTextureWrapTo(GLint param);
+
+	void ChangeTextureMinFilterTo(GLint param);
+	void ChangeTextureMagFilterTo(GLint param);
 	
 	~Texture();
 private:

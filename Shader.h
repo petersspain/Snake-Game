@@ -5,6 +5,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 class Shader {
 public:
 	explicit Shader(const char* vertex_shader_location, const char* fragment_shader_location);
@@ -12,6 +16,8 @@ public:
 	void Use() const;
 
 	void SetInt(const char* varname, int value);
+	void SetFloat(const char* varname, float value);
+	void SetMatrix4f(const char* varname, const glm::mat4& matrix, GLint transpose = GL_FALSE);
 
 	GLuint GetShaderId() const { return shader_id_; }
 

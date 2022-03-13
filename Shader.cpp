@@ -115,6 +115,7 @@ void Shader::Use() const {
 	glUseProgram(shader_id_);
 }
 
+// NOTE: SetInt and SetFloat completely the same, the only deference is a type => may be a template (template<typename T> void Set(const char* varname, T value);) ????? glUniform1f, 1i, 3f .....
 void Shader::SetInt(const char* varname, int value) {
 	GLint location = glGetUniformLocation(shader_id_, varname);
 	if (location == -1) {
@@ -122,6 +123,24 @@ void Shader::SetInt(const char* varname, int value) {
 		throw std::runtime_error("Unable to find uniform location");
 	}
 	glUniform1i(location, value);
+}
+
+void Shader::SetFloat(const char* varname, float value) {
+	GLint location = glGetUniformLocation(shader_id_, varname);
+	if (location == -1) {
+		std::cerr << "Unable to find uniform (" << varname << ") location in shader : " << shader_id_ << std::endl;
+		throw std::runtime_error("Unable to find uniform location");
+	}
+	glUniform1f(location, value);
+}
+
+void Shader::SetMatrix4f(const char* varname, const glm::mat4& matrix, GLint transpose) {
+	GLint location = glGetUniformLocation(shader_id_, varname);
+	if (location == -1) {
+		std::cerr << "Unable to find uniform (" << varname << ") location in shader : " << shader_id_ << std::endl;
+		throw std::runtime_error("Unable to find uniform location");
+	}
+	glUniformMatrix4fv(location, 1, transpose, glm::value_ptr(matrix));
 }
 
 void Shader::Clear() {

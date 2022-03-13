@@ -17,6 +17,11 @@ public:
 		glfwSwapBuffers(window_);
 	}
 
+	// ????
+	GLint GetKeyStatus(GLint key) const;
+
+	// ????
+
 	~Window();
 private:
 	void Initialize();

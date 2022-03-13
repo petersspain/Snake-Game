@@ -35,6 +35,26 @@ void Texture::Use() const {
 	glBindTexture(GL_TEXTURE_2D, texture_id_);
 }
 
+void Texture::ChangeTextureWrapTo(GLint param) {
+	glActiveTexture(texture_unit_);
+	glBindTexture(GL_TEXTURE_2D, texture_id_);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param);
+}
+
+void Texture::ChangeTextureMinFilterTo(GLint param) {
+	glActiveTexture(texture_unit_);
+	glBindTexture(GL_TEXTURE_2D, texture_id_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param);
+}
+
+void Texture::ChangeTextureMagFilterTo(GLint param) {
+	glActiveTexture(texture_unit_);
+	glBindTexture(GL_TEXTURE_2D, texture_id_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param);
+}
+
 Texture::~Texture() {
 	glDeleteTextures(1, &texture_id_);
 }
