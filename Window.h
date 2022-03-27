@@ -8,19 +8,15 @@ public:
 	Window();
 	Window(int width, int height, const char* title);
 
-	bool GetShouldClose() const { //inline
-		return glfwWindowShouldClose(window_);
-	}
-	void ProcessInput();
-
 	void SwapBuffers() { // inline
 		glfwSwapBuffers(window_);
 	}
 
-	// ????
-	GLint GetKeyStatus(GLint key) const;
+	void SetKeyCallback(GLFWkeyfun function);
 
-	// ????
+	bool GetShouldClose() const { //inline
+		return glfwWindowShouldClose(window_);
+	}
 
 	~Window();
 private:

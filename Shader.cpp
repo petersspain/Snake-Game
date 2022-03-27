@@ -234,7 +234,7 @@ void Shader::SetVector4f(const char* varname, const glm::vec4& value, bool use_s
 	glUniform4f(location, value.x, value.y, value.z, value.w);
 }
 
-void Shader::SetMatrix4(const char* varname, const glm::mat4& matrix, size_t transpose, bool use_shader) {
+void Shader::SetMatrix4(const char* varname, const glm::mat4& matrix, bool transpose, bool use_shader) {
 	if (use_shader) {
 		Use();
 	}

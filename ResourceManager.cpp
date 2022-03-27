@@ -6,6 +6,10 @@
 #include <fstream>
 #include <sstream>
 
+std::unordered_map<std::string, Shader> ResourceManager::Shaders;
+std::unordered_map<std::string, Texture> ResourceManager::Textures;
+
+
 Shader ResourceManager::LoadShader(const std::string& name, const char* vertex_shader_file, const char* fragment_shader_file, const char* geometry_shader_file)
 {
 	Shaders[name] = LoadShaderFromFile(vertex_shader_file, fragment_shader_file, geometry_shader_file);

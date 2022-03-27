@@ -18,14 +18,18 @@ void Game::Init() {
 
 }
 
-void Game::ProcessInput(float dt) {
+void Game::ProcessInput(float delta_time) {
 
 }
 
-void Game::Update(float dt) {
+void Game::Update(float delta_time) {
 
 }
 
 void Game::Render() {
 
+}
+
+void Game::SetKey(size_t key, bool state) {
+	keys_[key] = state;
 }

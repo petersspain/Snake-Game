@@ -28,28 +28,6 @@ Window::Window(int width, int height, const char* title)
 	}
 }
 
-void Window::ProcessInput() {
-	if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window_, true);
-}
-
-void Window::Clear() {
-	if (window_ != nullptr) {
-		glfwDestroyWindow(window_);
-	}
-	glfwTerminate();
-}
-// ????
-GLint Window::GetKeyStatus(GLint key) const
-{
-	return glfwGetKey(window_, key);
-}
-// ????
-
-Window::~Window() {
-	Clear();
-}
-
 void Window::Initialize() {
 	if (!glfwInit()) {
 		throw std::runtime_error("GLFW initialisation failed");
@@ -72,4 +50,22 @@ void Window::Initialize() {
 	}
 
 	glViewport(0, 0, width_, height_);
+	// ?
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+Window::~Window() {
+	Clear();
+}
+
+void Window::Clear() {
+	if (window_ != nullptr) {
+		glfwDestroyWindow(window_);
+	}
+	glfwTerminate();
+}
+
+void Window::SetKeyCallback(GLFWkeyfun function) {
+	glfwSetKeyCallback(window_, function);
 }

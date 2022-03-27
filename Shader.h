@@ -26,7 +26,7 @@ public:
 	void SetVector3f(const char* varname, const glm::vec3& value, bool use_shader = false);
 	void SetVector4f(const char* varname, float x, float y, float z, float w, bool use_shader = false);
 	void SetVector4f(const char* varname, const glm::vec4& value, bool use_shader = false);
-	void SetMatrix4(const char* varname, const glm::mat4& matrix, size_t transpose = GL_FALSE, bool use_shader = false);
+	void SetMatrix4(const char* varname, const glm::mat4& matrix, bool transpose = GL_FALSE, bool use_shader = false);
 private:
 	void AddShader(GLuint shader_id, const char* shader_code);
 private:

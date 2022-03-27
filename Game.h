@@ -13,9 +13,11 @@ public:
     // initialize game state (load all shaders/textures/levels)
     void Init();
     // game loop
-    void ProcessInput(float dt);
-    void Update(float dt);
+    void ProcessInput(float delta_time);
+    void Update(float delta_time);
     void Render();
+
+    void SetKey(size_t key, bool state);
 private:
     // game state
     GameState    state_;
