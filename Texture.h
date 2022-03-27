@@ -3,21 +3,36 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-// REFACTOR CLASS
-
 class Texture {
 public:
-	Texture(const char* file_location, GLint format = GL_RGB, GLenum type = GL_UNSIGNED_BYTE, GLenum texture_unit = GL_TEXTURE0);
-
-	void Use() const;
-
-	void ChangeTextureWrapTo(GLint param);
-
-	void ChangeTextureMinFilterTo(GLint param);
-	void ChangeTextureMagFilterTo(GLint param);
-	
+	Texture();
 	~Texture();
+
+	void Generate(size_t width, size_t height, const unsigned char* data);
+
+	// may be used before Generate()
+	void SetWrapS(size_t param) { wrap_s_ = param; }
+	void SetWrapT(size_t param) { wrap_t_ = param; }
+	void SetInternalFormat(size_t param) { internal_format_ = param; }
+	void SetImageFormat(size_t param) { image_format_ = param; }
+	void SetFilterMin(size_t param) { filter_min_ = param; }
+	void SetFilterMax(size_t param) { filter_max_ = param; }
+
+	size_t GetTextureID() const { return texture_id_; }
+	size_t GetWidth() const { return width_; }
+	size_t GetHeight() const { return height_; }
+
+	void Bind() const;
 private:
-	GLenum texture_unit_;
-	GLuint texture_id_ = 0;
+	size_t texture_id_ = 0;
+	// texture image dimensions
+	size_t width_ = 0, height_ = 0; // width and height of loaded image in pixels
+	// texture Format
+	size_t internal_format_ = GL_RGB; // format of texture object
+	size_t image_format_ = GL_RGB; // format of loaded image
+	// texture configuration
+	size_t wrap_s_ = GL_REPEAT; // wrapping mode on S axis
+	size_t wrap_t_ = GL_REPEAT; // wrapping mode on T axis
+	size_t filter_min_ = GL_LINEAR; // filtering mode if texture pixels < screen pixels
+	size_t filter_max_ = GL_LINEAR; // filtering mode if texture pixels > screen pixels
 };

@@ -48,61 +48,76 @@ int main() {
 		0, 1, 3,
 		1, 2, 3
 	};
-	Mesh triangle(vertices, sizeof(vertices), indices, sizeof(indices));
-	Texture wooden_container("Textures/container.jpg");
-	wooden_container.ChangeTextureWrapTo(GL_CLAMP_TO_EDGE);
-	Texture awesome_face("Textures/awesomeface.png", GL_RGBA, GL_UNSIGNED_BYTE, GL_TEXTURE1);
+	Mesh square(vertices, sizeof(vertices), indices, sizeof(indices));
+	Texture snake_block("Textures/snake_block.png", GL_RGBA, GL_UNSIGNED_BYTE, GL_TEXTURE0);
 
-	wooden_container.ChangeTextureMinFilterTo(GL_NEAREST);
-	wooden_container.ChangeTextureMagFilterTo(GL_NEAREST);
-
-	awesome_face.ChangeTextureMinFilterTo(GL_NEAREST);
-	awesome_face.ChangeTextureMagFilterTo(GL_NEAREST);
-
-	float mix_factor = 0.5f;
+	float scale_factor = 100.f;
+	float x_trans = 0.f;
+	float y_trans = HEIGHT / 2;
 
 	while (!window.GetShouldClose()) {
 		// input
 		window.ProcessInput();
-		if (window.GetKeyStatus(GLFW_KEY_UP) == GLFW_PRESS) {
-			mix_factor += 0.01f;
+		//if (window.GetKeyStatus(GLFW_KEY_W) == GLFW_PRESS) {
+		//	scale_factor += 1.0f;
+		//}
+		//else if (window.GetKeyStatus(GLFW_KEY_S) == GLFW_PRESS) {
+		//	scale_factor -= 1.0f;
+		//}
+
+		//if (window.GetKeyStatus(GLFW_KEY_UP) == GLFW_PRESS) {
+		//	y_trans += 1.f;
+		//}
+		//else if (window.GetKeyStatus(GLFW_KEY_DOWN) == GLFW_PRESS) {
+		//	y_trans -= 1.f;
+		//}
+
+		if (window.GetKeyStatus(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			x_trans += 1.f;
 		}
-		else if (window.GetKeyStatus(GLFW_KEY_DOWN) == GLFW_PRESS) {
-			mix_factor -= 0.01f;
+		else if (window.GetKeyStatus(GLFW_KEY_LEFT) == GLFW_PRESS) {
+			x_trans -= 1.0f;
 		}
 
-		if (mix_factor > 1.0) {
-			mix_factor = 1.0f;
+		if (x_trans > WIDTH) {
+			x_trans = 0.f;
 		}
-		if (mix_factor < 0.0) {
-			mix_factor = 0.0f;
-		}
+
+		//if (scale_factor > 1000.f) {
+		//	scale_factor = 1000.f;
+		//}
+		//if (scale_factor < 0.f) {
+		//	scale_factor = 0.f;
+		//}
 
 		// rendering commands
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// create transform
-		//transform = glm::rotate(transform, static_cast<float>(glfwGetTime()), glm::vec3(0.f, 0.f, 1.f));
-		//transform = glm::scale(transform, glm::vec3(1.5f, 1.5f, 1.0f));
-
-		// draw our first triangle
+		// draw
 		shader_program.Use(); // what shaders should we use
 		shader_program.SetInt("texture0", 0);
-		shader_program.SetInt("texture1", 1);
-		shader_program.SetFloat("mix_factor", mix_factor);
-		wooden_container.Use();
-		awesome_face.Use();
+		snake_block.Use();
 
-		glm::mat4 transform = glm::mat4(1.0f);
-		shader_program.SetMatrix4f("transform", transform);
-		triangle.Render(); // what object we render - which vertices we sending as input in the VERTEX SHADER
+		// first block
+		// model
+		for (size_t i = 0; i < 2; i++) {
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::scale(model, glm::vec3(scale_factor, scale_factor, 1.f));
+			shader_program.SetMatrix4f("model", model);
 
-		float scl_factor = glm::sin(static_cast<float>(glfwGetTime()));
-		transform = glm::translate(transform, glm::vec3(scl_factor, scl_factor, 0.0f));
-		transform = glm::scale(transform, glm::vec3(scl_factor, scl_factor, 1.0f));
-		shader_program.SetMatrix4f("transform", transform);
-		triangle.Render();
+			// view
+			glm::mat4 view = glm::mat4(1.f);
+			view = glm::translate(view, glm::vec3(x_trans + i * scale_factor, y_trans, 0.f));
+			shader_program.SetMatrix4f("view", view);
+
+			// projection
+			glm::mat4 projection = glm::ortho(0.f, static_cast<float>(WIDTH), static_cast<float>(HEIGHT), 0.f, -1.f, 1.f);
+			shader_program.SetMatrix4f("projection", projection);
+
+			//render
+			square.Render(); // what object we render - which vertices we sending as input in the VERTEX SHADER
+		}
 
 		// check and call events and swap buffers
 		glfwPollEvents();
